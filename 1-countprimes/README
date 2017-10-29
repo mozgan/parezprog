@@ -1,0 +1,71 @@
+Übungsaufgabe 1 - Primzahlen
+
+Problemstellung:
+Schreiben Sie ein Ada-Programm, dass zu einer ganzen Zahl N (N >= 2) ermittelt,
+wie viele Primzahlen es im Intervall 2..N (jeweils inklusive) gibt. Um die
+Performance zu optimieren, soll ihr Programm T Threads parallel nutzen, die
+jeweils Blöcke von (max.) S Zahlen bearbeiten.
+Die Parameter N, T und S sollen dabei per Kommandozeile oder per interaktiver
+Eingabe (wählen Sie eine Option nach Ihren Vorlieben) einstellbar sein.
+
+Vorschlag einer Lösungsmethode:
+Ihr Programm sollte einem Master Thread und T Worker Threads verwenden. Der
+Master bestimmt zunächst die Parameter N, T und S erstellt dann die T Worker.
+Das Intervall [2..N] wird in ceil((N-1)/S) Teilintervalle zerlegt, so dass
+jedes Teilintervall max. Größe S hat.
+Die Worker fordern nun beim Master Aufgaben an. Solange es noch unbearbeitete
+Teilintervalle gibt, teilt der Master jedem Worker ein Teilintervall zu. Die
+Worker rechnen dann unabhängig voneinander, parallel an ihren zugeteilten
+Aufgaben und teilen dem Master das Ergebnis für ihr Teilintervall mit, ehe sie
+eine neue Aufgabe anfordern. Der Master nimmt die Teilergebisse entgegen und
+addiert sie zu einem Gesamtergebnis.
+Sind bereits alle Teilintervalle zugeteilt, bekommen die anfragenden Worker
+den Befehl sich zu regulär beenden. Verwenden Sie nicht 'abort' um einen
+Worker hart abzubrechen!
+
+Jeder Worker, der die Arbeit an einem neuen Teilintervall beginnt, soll eine
+Meldung darüber ausgeben. Auch wenn das Teilintervall fertig berechnet ist,
+soll das Teilergebnis auf dem Bildschirm ausgegeben werden. Hinweis: Die
+Funktionen Text_IO.Put() und Text_IO.Put_Line() sind Threadsafe.
+
+Vergleichen Sie für N = 10_000, 100_000, 1_000_000 und 10_000_000 die
+Performance ihres Programms für verschiedene Werte von T und S. Welche Werte
+sind für Ihren Computer günstig?
+
+Beispiel für einen Programmablauf:
+$ ./countprimes 1000000 3 200000
+Count Primes [1 .. 1000000] - TaskCnt: 3 - SliceSize: 200000
+Starting Master:
+RangeMin = 1
+RangeMax = 1000000
+TaskCnt = 3
+SliceSize= 200000
+SliceCnt = 5
+Another Worker Created
+Another Worker Created
+Worker 1: Ready for Service
+Another Worker Created
+Worker 2: Ready for Service
+Worker 3: Ready for Service
+Worker 1: Starting Computation for 1 .. 200000
+Worker 2: Starting Computation for 200001 .. 400000
+Worker 3: Starting Computation for 400001 .. 600000
+Worker 1: Completed Computation for 1 .. 200000 - Found 17984 Primes
+Worker 1: Starting Computation for 600001 .. 800000
+Worker 2: Completed Computation for 200001 .. 400000 - Found 15876 Primes
+Worker 2: Starting Computation for 800001 .. 1000000
+Worker 3: Completed Computation for 400001 .. 600000 - Found 15238 Primes
+Worker 3: Terminating
+Worker 1: Completed Computation for 600001 .. 800000 - Found 14853 Primes
+Worker 1: Terminating
+Worker 2: Completed Computation for 800001 .. 1000000 - Found 14547 Primes
+PrimeCnt = 78498
+Master Terminating
+Worker 2: Terminating
+RunTime = 0.478796606 seconds
+
+Nützliche Ada Packete:
+Ada.Text_IO
+Ada.Real_Time
+Ada.Command_Line
+

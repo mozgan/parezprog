@@ -1,0 +1,51 @@
+Auf einer Baustelle gibt es zwei Lagerplätze A und B für Schüttmaterial, die zu
+Beginn beide leer sind.
+Bauarbeiter transportieren Material von einem Lagerplatz zum anderen, wobei die
+Menge auf einem Platz weniger am anderen mehr wird. Ggfs. wird ein Loch
+gegraben (negativer Inhalt).
+Zum Transportieren hat jeder Bauarbeiter genau eine Scheibtruhe
+(Schubkarre, ...) in seinem Besitz. Jeder Arbeiter transportiert genau eine
+Einheit an Schüttmaterial mit seiner Scheibtruhe und macht anschließend eine
+Pause beliebiger Länge.
+Auf der Baustelle arbeiten n>0 Bauarbeiter.
+
+Die Gewerkschaft verbietet, dass Scheibtruhen ohne Arbeitshandschuhe befördert
+werden dürfen.
+Der Arbeitgeber besorgt deswegen k>0 Paare von Arbeitshandschuhen. Jeder
+Bauarbeiter fasst nun vor dem Transport von Schüttmaterial je einen rechten
+und einen linken Arbeitshandschuh aus, die er wieder zurückgibt, sobald der
+Transport erledigt ist (und seine Pause beginnt).
+Unter den Bauarbeitern gibt es Rechts- und Linkshänder. Rechtshänder nehmen
+zuerst einen rechten Arbeitshandschuh, dann den linken; Linkshänder genau
+umgekehrt.
+
+Das Anziehen (und das Ausziehen) der bockigen Sicherheitshandschuhe (sowie der
+eigentliche Transport) benötigen endliche Zeit, die sie zufällig wählen können.
+
+Theoretische Fragen:
+(1) Bei welchen Konstellationen kommt es zu einem Deadlock, bei welchen nicht?
+(2) Was sind die kleinstmöglichen Konstellationen, bei denen es zu einem
+Deadlock kommt oder nicht kommt?
+
+Implementieren Sie das obige System!
+Dabei sollen Bauarbeiter als Tasks realisiert werden. Außer dem Main-Task
+sollen sonst keine Tasks vorkommen. In Abstand von einer Sekunde, soll der
+Main-Task den Materialstand der Lagerplätze ausgeben.
+Die Bauarbeiter-Tasks (es gibt zwei Arten: Rechts- und Linkshänder)
+entscheiden zufällig, ob sie Material von A nach B oder von B nach A
+transportieren. Jeder Transport soll mittels Ausgabe (Text_IO.Put_Line)
+mitprotokolliert werden, nicht zuletzt um Deadlocks erkennen zu können.
+
+Beantworten Sie vorab folgende Fragen:
+(1) Ist es notwendig, dass Scheibtruhen in der Implementierung explizit
+vorkommen?
+(2) Müssen beide Lagerplätze in der Implementierung vorkommen?
+
+Die Parameter n und k sollen als Argumente an das Programm übergeben werden
+können, ebenso die Rechts- bzw. Linkshändigkeit der Bauarbeiter in geeigneter
+Form (z.B., indem Sie als Argumente die Anzahl der Paare an vorhandenen
+Arbeitshandschuhen, die Anzahl der rechts- bzw. linkshändigen Arbeiter angeben).
+
+Überprüfen Sie Ihre Voraussagen betreffend Deadlocks mittels Ihrer Implementierung!
+Welche Ihrer Voraussagen können Sie an Hand Ihrer Implementierung nachweisen?
+
