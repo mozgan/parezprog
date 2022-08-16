@@ -1,0 +1,72 @@
+Speedup and Efficiency
+======================
+
+           Sequential
+Speedup = ———————————
+            Parallel
+
+Ex: if the serial application executes in 6720 seconds and a corresponding
+parallel application runs in 126.7 seconds (using 64 threads and cores), the
+speedup of the parallel application is 53X (6720/126.7 = 53.038).
+
+                       Speedup
+Efficiency = ———————————————————————————
+              Number of Cores (threads)
+
+
+Amdahl's Law
+============
+
+                          1
+Speedup <= ————————————————————————
+                            pctPar
+            (1 - pctPar) + ———————
+                               p
+
+
+*) pctPar: parallel execution time 
+*) 1 - pctPar : serial execution time
+*) p : number of threads/cores
+
+The parallel execution time is estimated to be the percentage of serial
+execution (1 - pctPar) and the percentage of execution that can be run in
+parallel divided by the number of cores to be used (pctPar/p). 
+
+
+Ex: if 95% of a serial application's run time could be executed in parallel on
+eight cores, the estimated speedup, according to Amdahl's Law, could as much
+6X (1 / (0.05 + 0.95/8) = 5.925).
+
+
+Gustafson's Law
+===============
+
+Speedup <= p + (1 - p)*s
+
+*) p : number of cores
+*) s : percentage of serial execution time in the parallel application for a
+given data set size
+
+Ex: if 1% of execution time on 32 cores will be spent in serial execution, the
+speedup of this application over the same data set being run on a single core
+with a single thread (assuming that to be possible) is:
+
+Speedup <= 32 + (1 - 32)(0.01) = 32 - 0,31 = 31,69X
+
+Consider what Amdahl's Law would estimate for the speedup with these
+assumptions. Assuming the serial execution percentage to be 1%, the equation
+for Amdahl's Law yields 1/(0.01 + (0.99/32)) = 24.43X. This is a false
+computation, however, since the given percentage of serial time is relative to
+the 32-core execution.
+
+On the other hand, if the total parallel application execution time is known in
+the 32-core case, the fully serial execution time can be calculated and the
+speed up for that fix-sized problem (further assuming that it could be computed
+with a single core) could be predicted with Amdahl's Law on 32 cores. Assuming
+the total execution time for a parallel application is 1040 seconds on 32 cores,
+then 1% of that time would be serial only, or 10.4 seconds. By multiplying the
+number of seconds (1029.6) for parallel execution on 32 cores, the total amount
+of work done by the application takes 1029.6*32+10.4 = 32957.6 seconds. The
+nonparallel time (10.4 seconds) is 0.032% of that total work time. Using that
+figure, Amdahl's Law calculates a speedup of 1/(0.00032 + (0.99968/32)) = 31.686X.
+

@@ -1,0 +1,136 @@
+Parallele und Echtzeitprogrammierung - Aufgabe 2:
+
+Erweitern Sie Ihre Lösung aus Aufgabe 1 um eine Laufzeitbegrenzung.
+
+Wenn man die Primzahlzählung für sehr große Intervalle ausführt, muss man
+mitunter sehr lange warten. Warten ist langweilig und daher soll die Laufzeit
+des Programmes begrenzt werden. Das Programm soll daher also einen weiteren
+Parameter entgegennehmen, der (in Millisekunden) ausdrückt, wie lange wir
+gewillt sind, auf unsere Antwort zu warten. Nach Möglichkeit sollte das
+Programm in dieser Zeit die exakte Antwort liefern. Wenn aber das gewählte
+Intervall zu groß für die gewählte Zeitspanne ist, soll das Progamm eine
+Näherungsformel für die Anzahl der Primzahlen verwenden.
+
+Wenn man die Primzahlzählung exakt korrekt ausführen will, muss man
+tatsächlich jede Zahl im untersuchten Intervall rechenintensiv darauf testen,
+ob sie eine Primzahl ist oder nicht. Es gibt aber auch Näherungsformeln, die
+für ein Intervall abschätzen, wie viele der darin enthaltenen Zahlen wohl
+Primzahlen sind. Die Ergebnisse, die mit diesen Formeln berechnet werden, sind
+nicht vollkommen korrekt, aber dafür ist die Berechnung sehr viel schneller
+als der Primzahltest.
+
+Mögliche Näherungsformeln:
+
+Die Anzahl der Primzahlen im Bereich a..b ist ungefähr Integral(a..b)
+{dt/ln(t)}. Dieses Integral kann man per Numerischer Integration
+näherungsweise berechnen.
+Die Anzahl der Primzahlen im Bereich 2..n kann auch (deutlich grober, aber auch
+schneller als mit dem obigen Integral) als n / (ln(n) - 1) berechnet werden.
+
+Nützliche Weblinks:
+http://en.wikipedia.org/wiki/Logarithmic_integral
+http://en.wikipedia.org/wiki/Prime_counting_function
+http://de.wikipedia.org/wiki/Numerische_Integration
+http://primes.utm.edu/howmany.shtml
+
+Bei der Programmierung können Sie entscheiden, wie sie vorgehen wollen, wenn
+das Timeout abgelaufen ist. Sie können entweder alles wegwerfen, was ihr
+Programm bisher berechnet hat und mit der Näherungsformel von vorne anfangen
+(das ist programmtechnisch einfacher) oder sie können versuchen, jene
+Teilintervalle, die exakt berechnet wurden, zu nutzen und nur die noch nicht
+berechneten Teilintervalle per Näherungsformel zu schätzen (das ist
+programmtechnisch schwieriger, liefert aber genauere Ergebnisse).
+
+Anmerkungen:
+Je nach Compiler und Betriebssystem werden Änderungen im Scheduling nur zu
+bestimmten Zeitpunkten (und nicht sofort bei Eintreffen einer Bedingung)
+übernommen. Wenn der Code einer 'then abort' Klausel mit dem Ende des Timeouts
+nicht sofort abgebrochen wird, hilft es, ggf. in den abzubrechenden Code ein
+'delay 0.0' Statements einzubauen, um die Neuberechnung des Scheduling zu
+erzwingen.
+
+Wenn wir erst nach Ablauf des gewählten Timeouts damit beginnen, unseren
+Rechenalgorithmus umzustellen, benötigen wir natürlich für die Restberechnung
+noch etwas Zeit und sind somit nicht exakt innerhalb der gewählten Zeitspanne
+fertig. Dies ist akzeptabel, sofern es sich (auch bei sehr großen Blöcken) nur
+um einige 100ms handelt.
+
+Es ist für die 2. Abgabe nicht mehr zulässig, die gesamte Aufgabe mit einer
+einzigen Programmdatei zu lösen. Zerlegen Sie Ihr Programm an logischen
+Schnittstellen in mehrere unabhängige Module, die sich dann unabhängig
+voneinander compilieren lassen.
+
+Denken Sie daran, ihr Programm zu dokumentieren! Kommentare sind langfristig
+ihre Freunde, auch wenn es kurzfristig Mühe macht, sie zu schreiben! Versuchen
+sie auch, Kommentare einzusetzen, um das Programmlisting optisch zu gliedern
+und in leicht erkennbare logische Blöcke zu zerlegen.
+
+Viele Cores auf ihrem Rechner sind kein Grund für Nachlässigkeit bei der
+Programmeffizienz. Richtwert: Die Suche bis 10_000_000 sollte bei Nutzung von
+nur einem Thread deutlich(!) unter 30 Sekunden liegen.
+
+Nützliche Ada-Pakete:
+Ada.Real_Time
+Ada.Execution_Time
+Ada.Calendar
+
+Beispiel für einen Programmlauf mit Timeout:
+$ ./countprimes 10_000_000 4 1000_000 2000
+Count Primes [1 .. 10000000] - TaskCnt: 4 - SliceSize: 1000000
+Starting Range:
+RangeMin = 1
+RangeMax = 10000000
+TaskCnt = 4
+SliceSize= 1000000
+MaxTime = 2000
+SliceCnt = 10
+Another Worker Created
+Another Worker Created
+Another Worker Created
+Worker 1: Ready for Service
+Another Worker Created
+Worker 2: Ready for Service
+Worker 3: Ready for Service
+Worker 4: Ready for Service
+Worker 1: Starting Computation for 1 .. 1000000
+Using exact Algorithm at position 3
+Worker 2: Starting Computation for 1000001 .. 2000000
+Using exact Algorithm at position 1000001
+Worker 3: Starting Computation for 2000001 .. 3000000
+Using exact Algorithm at position 2000001
+Worker 4: Starting Computation for 3000001 .. 4000000
+Using exact Algorithm at position 3000001
+Worker 1: Completed Computation for 1 .. 1000000 - Found 78498 Primes in 0.230331200 seconds
+Worker 1: Starting Computation for 4000001 .. 5000000
+Using exact Algorithm at position 4000001
+Worker 2: Completed Computation for 1000001 .. 2000000 - Found 70435 Primes in 0.340489600 seconds
+Worker 3: Completed Computation for 2000001 .. 3000000 - Found 67883 Primes in 0.380547200 seconds
+Worker 2: Starting Computation for 5000001 .. 6000000
+Using exact Algorithm at position 5000001
+Worker 3: Starting Computation for 6000001 .. 7000000
+Using exact Algorithm at position 6000001
+Worker 4: Completed Computation for 3000001 .. 4000000 - Found 66330 Primes in 0.430619200 seconds
+Worker 4: Starting Computation for 7000001 .. 8000000
+Using exact Algorithm at position 7000001
+*********** Timeout Expired ***********
+Switching to approx. Algorithm at position 5344083
+Worker 2: Completed Computation for 5000001 .. 6000000 - Found 64428 Primes in 0.180259200 seconds
+Switching to approx. Algorithm at position 6274555
+Worker 3: Completed Computation for 6000001 .. 7000000 - Found 63737 Primes in 0.160230400 seconds
+Switching to approx. Algorithm at position 7176823
+Worker 4: Completed Computation for 7000001 .. 8000000 - Found 63162 Primes in 0.100144000 seconds
+Switching to approx. Algorithm at position 4594975
+Worker 1: Completed Computation for 4000001 .. 5000000 - Found 65314 Primes in 0.320460800 seconds
+Worker 2: Starting Computation for 8000001 .. 9000000
+Using approx. Algorithm at position 8000001
+Worker 2: Completed Computation for 8000001 .. 9000000 - Found 62677 Primes in 0.000000000 seconds
+Worker 3: Starting Computation for 9000001 .. 10000000
+Using approx. Algorithm at position 9000001
+Worker 3: Completed Computation for 9000001 .. 10000000 - Found 62242 Primes in 0.000000000 seconds
+Worker 4 Terminating
+Worker 1 Terminating
+PrimeCnt = 664706
+Master Terminating
+Worker 2 Terminating
+Worker 3 Terminating
+RunTime = 2.152201467 seconds
